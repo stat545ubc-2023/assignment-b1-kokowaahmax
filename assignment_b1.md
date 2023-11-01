@@ -61,14 +61,12 @@ function using roxygen2 tags.
 #' @return A data frame with grouped summaries, where each group is defined by
 #'         the specified grouping variables. The summary statistics for each
 #'         column are calculated based on the expressions provided.
-#'
-#' @export
+
 summarize_data <- function(data, group_vars, ...) {
-  summary_exprs <- enquos(...)
+  summary_exprs <- rlang::enquos(...)
   
-  result <- data %>%
-    group_by(across(all_of(group_vars), .names = "group")) %>%
-    summarise(!!!summary_exprs, .groups = "drop")
+  result <- dplyr::group_by(data, dplyr::across(dplyr::all_of(group_vars), .names = "group"))
+  result <- dplyr::summarise(result, !!!summary_exprs, .groups = "drop")
   
   return(result)
 }
@@ -132,7 +130,7 @@ test_that("Test Case 1: Vector with No NAs", {
 })
 ```
 
-    ## Test passed 🥳
+    ## Test passed 😀
 
 ``` r
 # Test case 2: Vector with NAs
@@ -147,7 +145,7 @@ test_that("Test Case 2: Vector with NAs", {
 })
 ```
 
-    ## Test passed 🌈
+    ## Test passed 🥇
 
 ``` r
 # Test Case 3: Vector of length 0
@@ -161,4 +159,4 @@ test_that("Test Case 3: Vector of Length 0", {
 })
 ```
 
-    ## Test passed 🌈
+    ## Test passed 🥇
